@@ -1,7 +1,7 @@
 import pygame
 from circleshape import CircleShape
 from shot import Shot
-from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, PLAYER_SPEED, SHOT_RADIUS, PLAYER_SHOOT_SPEED, PLAYER_SHOOT_COOLDOWN_SECONDS
+from constants import PLAYER_RADIUS, LINE_WIDTH, PLAYER_TURN_SPEED, PLAYER_SPEED, SHOT_RADIUS, PLAYER_SHOOT_SPEED, PLAYER_SHOOT_COOLDOWN_SECONDS, SCREEN_HEIGHT, SCREEN_WIDTH
 
 class Player(CircleShape):
     def __init__(self, x, y):
@@ -27,7 +27,20 @@ class Player(CircleShape):
         unit_vector = pygame.Vector2(0, 1)
         rotated_vector = unit_vector.rotate(self.rotation)
         rotated_with_speed_vector = rotated_vector * PLAYER_SPEED * dt
-        self.position += rotated_with_speed_vector
+        new_position = self.position + rotated_with_speed_vector
+        if new_position.x > SCREEN_WIDTH:
+            self.position.x = SCREEN_WIDTH
+        elif new_position.x < 0:
+            self.position.x = 0
+        else:
+            self.position.x = new_position.x
+        
+        if new_position.y > SCREEN_HEIGHT:
+            self.position.y = SCREEN_HEIGHT
+        elif new_position.y < 0:
+            self.position.y = 0
+        else:
+            self.position.y = new_position.y
 
     def shoot(self):
         pew = Shot(self.position.x, self.position.y, SHOT_RADIUS)
